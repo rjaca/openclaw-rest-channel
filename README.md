@@ -26,7 +26,7 @@ Ideal for IoT devices, voice satellites, custom UIs, and any system that can mak
 Clone this repository into your machine:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/openclaw-rest-channel.git
+git clone https://github.com/rjaca/openclaw-rest-channel.git
 ```
 
 Then install it as a local plugin:
