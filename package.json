@@ -1,0 +1,34 @@
+{
+  "name": "rest-channel",
+  "version": "1.0.0",
+  "description": "Generic REST API channel plugin for OpenClaw — enables external devices and services to send messages into the agent",
+  "main": "src/index.ts",
+  "type": "module",
+  "openclaw": {
+    "extensions": ["./src/index.ts"]
+  },
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "channel",
+    "rest",
+    "api",
+    "iot",
+    "voice-satellite"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/.bin/vitest run",
+    "test:watch": "node --experimental-vm-modules node_modules/.bin/vitest"
+  },
+  "peerDependencies": {
+    "openclaw": ">=1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "vitest": "^3.0.0"
+  }
+}

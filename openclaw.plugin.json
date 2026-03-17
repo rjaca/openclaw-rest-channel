@@ -1,0 +1,32 @@
+{
+  "id": "rest-channel",
+  "name": "REST Channel",
+  "description": "Generic REST API channel for external devices and services",
+  "version": "1.0.0",
+  "channels": ["rest-channel"],
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "port": { "type": "number", "default": 7800 },
+      "token": { "type": "string" },
+      "responseTimeout": { "type": "number", "default": 60 },
+      "accounts": { "type": "object" }
+    },
+    "required": ["token"]
+  },
+  "uiHints": {
+    "port": {
+      "label": "HTTP Port",
+      "placeholder": "7800"
+    },
+    "token": {
+      "label": "Bearer Token",
+      "sensitive": true,
+      "placeholder": "your-shared-secret-here"
+    },
+    "responseTimeout": {
+      "label": "Response Timeout (seconds)",
+      "placeholder": "60"
+    }
+  }
+}
