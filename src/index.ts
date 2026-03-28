@@ -8,11 +8,9 @@ const plugin = {
   description: "Generic REST API channel for external devices and services",
 
   register(api: OpenClawPluginApi) {
-    const fullConfig = api.config as any;
-    const pluginEntry = fullConfig.plugins?.entries?.["rest-channel"];
-    const config = (pluginEntry?.config ?? {}) as ChannelConfig;
+    const config = (api.pluginConfig ?? {}) as ChannelConfig;
     const port = config.port ?? 7800;
-    const runtime = (api as any).runtime;
+    const runtime = api.runtime;
 
     // Shared bridge between the HTTP server and channel outbound
     const bridge = new ResponseBridge();
@@ -22,17 +20,17 @@ const plugin = {
     api.registerChannel({ plugin: channelPlugin });
 
     // Create the HTTP server — pass runtime for message dispatch
-    const server = createRestServer(config, api, bridge, runtime, fullConfig);
+    const server = createRestServer(config, api, bridge, runtime);
 
     // Register as a managed service for lifecycle control
     api.registerService({
       id: "rest-channel-http",
-      start() {
+      start: async (_ctx) => {
         server.listen(port, () => {
           api.logger.info(`REST Channel listening on port ${port}`);
         });
       },
-      stop() {
+      stop: async (_ctx) => {
         bridge.clear();
         server.close(() => {
           api.logger.info("REST Channel server stopped");

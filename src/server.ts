@@ -22,7 +22,6 @@ export function createRestServer(
   api: OpenClawPluginApi,
   bridge: ResponseBridge,
   runtime: any,
-  fullConfig: any,
 ): Server {
   const startTime = Date.now();
   const port = config.port ?? 7800;
@@ -138,8 +137,11 @@ export function createRestServer(
 
     // Build the dispatch function (not yet called)
     function startDispatch() {
+      // Load current config at dispatch time (not stale from startup)
+      const cfg = runtime.config.loadConfig();
+
       const route = runtime.channel.routing.resolveAgentRoute({
-        cfg: fullConfig,
+        cfg,
         channel: CHANNEL_ID,
         accountId: msg.accountId,
         peer: { kind: "direct", id: msg.peer },
@@ -162,7 +164,7 @@ export function createRestServer(
 
       return runtime.channel.reply.dispatchReplyWithBufferedBlockDispatcher({
         ctx,
-        cfg: fullConfig,
+        cfg,
         dispatcherOptions: {
           deliver: async (payload: any, info: any) => {
             if (info.kind !== "final") return;

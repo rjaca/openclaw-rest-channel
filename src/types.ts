@@ -55,14 +55,23 @@ export interface ChannelPlugin {
   };
 }
 
+export interface OpenClawPluginServiceContext {
+  config: Record<string, unknown>;
+  workspaceDir?: string;
+  stateDir: string;
+  logger: OpenClawLogger;
+}
+
 export interface OpenClawPluginApi {
   config: Record<string, unknown>;
+  pluginConfig?: Record<string, unknown>;
+  runtime: Record<string, any>;
   logger: OpenClawLogger;
   registerChannel(opts: { plugin: ChannelPlugin }): void;
   registerService(opts: {
     id: string;
-    start: () => void;
-    stop: () => void;
+    start: (ctx: OpenClawPluginServiceContext) => void | Promise<void>;
+    stop?: (ctx: OpenClawPluginServiceContext) => void | Promise<void>;
   }): void;
 }
 
@@ -133,4 +142,3 @@ export interface PendingResponse {
   resolve: (text: string) => void;
   timer: ReturnType<typeof setTimeout>;
 }
-
