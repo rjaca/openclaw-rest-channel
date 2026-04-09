@@ -22,21 +22,18 @@ const plugin = {
     // Create the HTTP server — pass runtime for message dispatch
     const server = createRestServer(config, api, bridge, runtime);
 
-    // Start listening immediately during register() — the service-lifecycle
-    // start() callback is no longer reliably invoked in newer OpenClaw SDKs.
     server.listen(port, () => {
       api.logger.info(`REST Channel listening on port ${port}`);
     });
     server.on("error", (err) => {
+      // EADDRINUSE is expected — register() is called multiple times by the SDK
+      if ((err as NodeJS.ErrnoException).code === "EADDRINUSE") return;
       api.logger.error(`REST Channel server error: ${(err as Error).message}`);
     });
 
-    // Still register a service for clean shutdown if the SDK invokes stop().
     api.registerService({
       id: "rest-channel-http",
-      start: async (_ctx) => {
-        // No-op: server already listening from register().
-      },
+      start: async (_ctx) => {},
       stop: async (_ctx) => {
         bridge.clear();
         server.close(() => {
